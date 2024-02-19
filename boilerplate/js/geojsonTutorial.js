@@ -1,3 +1,4 @@
+// Define a GeoJSON feature object with its properties and geometry.
 var geojsonFeature = {
     "type": "Feature",
     "properties": {
@@ -11,6 +12,7 @@ var geojsonFeature = {
     }
 };
 
+// Define an array of line geometries in GeoJSON format.
 var myLines = [{
     "type": "LineString",
     "coordinates": [[-100, 40], [-105, 45], [-110, 55]]
@@ -19,12 +21,14 @@ var myLines = [{
     "coordinates": [[-105, 40], [-110, 45], [-115, 55]]
 }];
 
+// Define a style object to be used for lines.
 var myStyle = {
     "color": "#ff7800",
     "weight": 5,
     "opacity": 0.65
 };
 
+// Define an array of GeoJSON feature objects with polygon geometries.
 var states = [{
     "type": "Feature",
     "properties": {"party": "Republican"},
@@ -53,6 +57,7 @@ var states = [{
     }
 }];
 
+// Define marker options for GeoJSON point features.
 var geojsonMarkerOptions = {
     radius: 8,
     fillColor: "#ff7800",
@@ -62,16 +67,19 @@ var geojsonMarkerOptions = {
     fillOpacity: 0.8
 };
 
+// Define a function to run on each feature before adding it to the GeoJSON layer, to bind a popup if necessary.
 function onEachFeature(feature, layer) {
     if (feature.properties && feature.properties.popupContent) {
         layer.bindPopup(feature.properties.popupContent);
     }
 }
 
+// Define a filter function to control the visibility of features based on their properties.
 function filterFeature(feature, layer) {
     return feature.properties.show_on_map;
 }
 
+// Define an array of GeoJSON feature objects for point geometries.
 var someFeatures = [{
     "type": "Feature",
     "properties": {
@@ -95,10 +103,7 @@ var someFeatures = [{
     }
 }];
 
-
-
-
-// Initialize the map
+// Initialize the map.
 var map = L.map('map').setView([39.76, -104.99], 13);
 
 // Add tile layer to the map
