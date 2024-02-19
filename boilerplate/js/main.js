@@ -39,8 +39,8 @@ function getData(map){
         .then(function(json){
             // Define marker options for the circle markers
             var geojsonMarkerOptions = {
-                radius: 8,
-                fillColor: "#ff7800",
+                radius: 7,
+                fillColor: "#c7bee8",
                 color: "#000",
                 weight: 1,
                 opacity: 1,
