@@ -15,7 +15,21 @@ function createMap(){
     getData(map);
 }
 
-// Function to retrieve the GeoJSON data and add it to the map
+// Function to attach popups to each mapped feature
+function onEachFeature(feature, layer) {
+    // Initialize an empty string for popup content
+    var popupContent = "";
+    if (feature.properties) {
+        // Loop to add feature property names and values to the popup content string
+        for (var property in feature.properties){
+            popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
+        }
+        // Bind the popup with the generated content to the layer (circle marker)
+        layer.bindPopup(popupContent);
+    }
+}
+
+// Function to retrieve the GeoJSON data and add it to the map with styling and popups
 function getData(map){
     // Load the data with fetch, then add a GeoJSON layer to the map
     fetch("data/MegaCities.geojson")
@@ -23,12 +37,23 @@ function getData(map){
             return response.json();
         })
         .then(function(json){
-            // Create a Leaflet GeoJSON layer and add it to the map
+            // Define marker options for the circle markers
+            var geojsonMarkerOptions = {
+                radius: 8,
+                fillColor: "#ff7800",
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            };
+            
+            // Create a Leaflet GeoJSON layer, style it, and add it to the map
             L.geoJson(json, {
-                onEachFeature: function(feature, layer) {
-                    // Bind popups to each feature, for example, displaying the city's name
-                    layer.bindPopup(feature.properties.City);
-                }
+                pointToLayer: function (feature, latlng){
+                    // Use the marker options to style each circle marker
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                },
+                onEachFeature: onEachFeature // Use the onEachFeature function to bind popups
             }).addTo(map);
         });
 }
