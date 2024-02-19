@@ -1,0 +1,247 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 1,
+          "MountainPeak": "Denali",
+          "State": "Alaska",
+          "MountainRange": "Alaska Range",
+          "Elevation_ft": 20310,
+          "Prominence_ft": 20146,
+          "Isolation_mi": 7450.24
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-151.0063, 63.0690]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 2,
+          "MountainPeak": "Mount Saint Elias",
+          "State": "Alaska/Yukon",
+          "MountainRange": "Saint Elias Mountains",
+          "Elevation_ft": 18009,
+          "Prominence_ft": 11250,
+          "Isolation_mi": 25.6
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-140.9307, 60.2927]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 3,
+          "MountainPeak": "Mount Foraker",
+          "State": "Alaska",
+          "MountainRange": "Alaska Range",
+          "Elevation_ft": 17400,
+          "Prominence_ft": 7250,
+          "Isolation_mi": 14.27
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-151.3998, 62.9604]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 4,
+          "MountainPeak": "Mount Bona",
+          "State": "Alaska",
+          "MountainRange": "Saint Elias Mountains",
+          "Elevation_ft": 16550,
+          "Prominence_ft": 6900,
+          "Isolation_mi": 49.7
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-141.7495, 61.3856]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 5,
+          "MountainPeak": "Mount Blackburn",
+          "State": "Alaska",
+          "MountainRange": "Wrangell Mountains",
+          "Elevation_ft": 16390,
+          "Prominence_ft": 11640,
+          "Isolation_mi": 60.7
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-143.4031, 61.7305]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 6,
+          "MountainPeak": "Mount Sanford",
+          "State": "Alaska",
+          "MountainRange": "Wrangell Mountains",
+          "Elevation_ft": 16237,
+          "Prominence_ft": 7687,
+          "Isolation_mi": 40.3
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-144.1292, 62.2132]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 7,
+          "MountainPeak": "Mount Fairweather",
+          "State": "Alaska/British Columbia",
+          "MountainRange": "Saint Elias Mountains",
+          "Elevation_ft": 15325,
+          "Prominence_ft": 12995,
+          "Isolation_mi": 124.4
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-137.5265, 58.9064]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 8,
+          "MountainPeak": "Mount Hubbard",
+          "State": "Alaska/Yukon",
+          "MountainRange": "Saint Elias Mountains",
+          "Elevation_ft": 14951,
+          "Prominence_ft": 8061,
+          "Isolation_mi": 21.3
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-139.0726, 60.3194]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 9,
+          "MountainPeak": "Mount Bear",
+          "State": "Alaska",
+          "MountainRange": "Saint Elias Mountains",
+          "Elevation_ft": 14831,
+          "Prominence_ft": 5054,
+          "Isolation_mi": 20.1
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-141.1433, 61.2834]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 10,
+          "MountainPeak": "Mount Hunter",
+          "State": "Alaska",
+          "MountainRange": "Alaska Range",
+          "Elevation_ft": 14573,
+          "Prominence_ft": 4653,
+          "Isolation_mi": 6.88
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-151.0915, 62.9504]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 11,
+          "MountainPeak": "Mount Whitney",
+          "State": "California",
+          "MountainRange": "Sierra Nevada",
+          "Elevation_ft": 14505,
+          "Prominence_ft": 10080,
+          "Isolation_mi": 2649.47
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-118.2920, 36.5786]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 12,
+          "MountainPeak": "Mount Alverstone",
+          "State": "Alaska/Yukon",
+          "MountainRange": "Saint Elias Mountains",
+          "Elevation_ft": 14500,
+          "Prominence_ft": 1950,
+          "Isolation_mi": 2.25
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-139.0749, 60.3518]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 13,
+          "MountainPeak": "University Peak",
+          "State": "Alaska",
+          "MountainRange": "Saint Elias Mountains",
+          "Elevation_ft": 14470,
+          "Prominence_ft": 3210,
+          "Isolation_mi": 3.71
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-141.7867, 61.3272]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 14,
+          "MountainPeak": "Mount Elbert",
+          "State": "Colorado",
+          "MountainRange": "Sawatch Range",
+          "Elevation_ft": 14440,
+          "Prominence_ft": 9093,
+          "Isolation_mi": 1079.15
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-106.4454, 39.1178]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "Rank": 15,
+          "MountainPeak": "Mount Massive",
+          "State": "Colorado",
+          "MountainRange": "Sawatch Range",
+          "Elevation_ft": 14428,
+          "Prominence_ft": 1961,
+          "Isolation_mi": 5.06
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-106.4757, 39.1875]
+        }
+      }
+      
+    ]
+  }
+  
