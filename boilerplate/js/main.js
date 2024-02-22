@@ -2,8 +2,8 @@
 function createMap(){
     // Create the map and set its view to a given geographical coordinates and zoom level
     var map = L.map('map', {
-        center: [20, 0],
-        zoom: 2
+        center: [37.8, -96], // Adjusted center to USA
+        zoom: 4 // Adjusted zoom level to show the USA
     });
 
     // Add OpenStreetMap tile layer to the map
@@ -15,22 +15,64 @@ function createMap(){
     getData(map);
 }
 
-// Function to attach popups to each mapped feature
-function onEachFeature(feature, layer) {
-    // Initialize an empty string for popup content
-    var popupContent = "<b>" + feature.properties['Entity Name'] + "</b><br>";
-
-    // Check if the PopulationData object exists and iterate over it
-    if (feature.properties.PopulationData) {
-        for (var year in feature.properties.PopulationData) {
-            popupContent += "Population " + year + ": " + feature.properties.PopulationData[year] + "<br>";
-        }
-    }
-
-    // Bind the popup with the generated content to the layer (circle marker)
-    layer.bindPopup(popupContent);
+// Function to calculate the radius of the circle markers
+function calcPropRadius(attValue) {
+    // Adjust the scaleFactor to increase the size of the markers
+    var scaleFactor = 0.0005; // Adjust this value to change the symbol sizes
+    var area = attValue * scaleFactor;
+    // Apply a square root to reduce the disparity in sizes
+    return Math.sqrt(area/Math.PI) * 2; // The multiplier can be adjusted for further refinement
 }
 
+
+
+// Function to convert markers to circle markers and add popups
+function pointToLayer(feature, latlng) {
+    // Access the nested PopulationData for the year 2021
+    var attribute = "PopulationData_2021";
+
+    // Create marker options
+    var options = {
+        fillColor: "#ff7800",
+        color: "#000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
+
+    // For each feature, determine its value for the selected attribute
+    var attValue = feature.properties.PopulationData['2021']; // Access the nested value
+    if (isNaN(attValue)) {
+        attValue = 1; // Default value if attValue is NaN
+    }
+
+    options.radius = calcPropRadius(attValue); // Call the calcPropRadius function
+
+    // Create circle marker layer
+    var layer = L.circleMarker(latlng, options);
+
+    // Build popup content string
+    var popupContent = "<p><b>Entity Name:</b> " + feature.properties['Entity Name'] + "</p>";
+
+    // Add formatted attribute to the popup content string
+    popupContent += "<p><b>Population in 2021:</b> " + attValue + "</p>";
+
+    // Bind the popup to the circle marker and add an offset
+    layer.bindPopup(popupContent, {
+        offset: new L.Point(0, -options.radius)
+    });
+
+    // Return the circle marker to the L.geoJson pointToLayer option
+    return layer;
+}
+
+// Add circle markers for point features to the map
+function createPropSymbols(data, map){
+    // Create a Leaflet GeoJSON layer and add it to the map
+    L.geoJson(data, {
+        pointToLayer: pointToLayer
+    }).addTo(map);
+}
 
 // Function to retrieve the GeoJSON data and add it to the map with styling and popups
 function getData(map){
@@ -40,24 +82,8 @@ function getData(map){
             return response.json();
         })
         .then(function(json){
-            // Define marker options for the circle markers
-            var geojsonMarkerOptions = {
-                radius: 7,
-                fillColor: "#c7bee8",
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            };
-            
-            // Create a Leaflet GeoJSON layer, style it, and add it to the map
-            L.geoJson(json, {
-                pointToLayer: function (feature, latlng){
-                    // Use the marker options to style each circle marker
-                    return L.circleMarker(latlng, geojsonMarkerOptions);
-                },
-                onEachFeature: onEachFeature // Use the onEachFeature function to bind popups
-            }).addTo(map);
+            // Call function to create proportional symbols
+            createPropSymbols(json, map);
         });
 }
 
