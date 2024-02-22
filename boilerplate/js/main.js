@@ -2,8 +2,8 @@
 // Function to instantiate the Leaflet map
 function createMap(){
     var map = L.map('map', {
-        center: [37.8, -96], // Adjusted center to USA
-        zoom: 4 // Adjusted zoom level to show the USA
+        center: [38.5816, -121.4944], // Coordinates for Sacramento
+        zoom: 7 // Adjusted zoom level for closer view
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
