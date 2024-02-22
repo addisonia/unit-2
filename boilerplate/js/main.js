@@ -32,7 +32,7 @@ function onEachFeature(feature, layer) {
 // Function to retrieve the GeoJSON data and add it to the map with styling and popups
 function getData(map){
     // Load the data with fetch, then add a GeoJSON layer to the map
-    fetch("data/USATallestMountains.geojson")
+    fetch("data/SacramentoRegionPop.geojson")
         .then(function(response){
             return response.json();
         })
