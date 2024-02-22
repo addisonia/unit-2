@@ -18,16 +18,19 @@ function createMap(){
 // Function to attach popups to each mapped feature
 function onEachFeature(feature, layer) {
     // Initialize an empty string for popup content
-    var popupContent = "";
-    if (feature.properties) {
-        // Loop to add feature property names and values to the popup content string
-        for (var property in feature.properties){
-            popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
+    var popupContent = "<b>" + feature.properties['Entity Name'] + "</b><br>";
+
+    // Check if the PopulationData object exists and iterate over it
+    if (feature.properties.PopulationData) {
+        for (var year in feature.properties.PopulationData) {
+            popupContent += "Population " + year + ": " + feature.properties.PopulationData[year] + "<br>";
         }
-        // Bind the popup with the generated content to the layer (circle marker)
-        layer.bindPopup(popupContent);
     }
+
+    // Bind the popup with the generated content to the layer (circle marker)
+    layer.bindPopup(popupContent);
 }
+
 
 // Function to retrieve the GeoJSON data and add it to the map with styling and popups
 function getData(map){
