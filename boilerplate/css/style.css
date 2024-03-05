@@ -1,10 +1,10 @@
-/*Add CSS styles here*/
-
+/* Overall map container */
 #map {
     height: 100%;
     width: 100%;
 }
 
+/* Sequence controls panel */
 #panel {
     width: 25%;
     padding: 20px;
@@ -14,8 +14,7 @@
     line-height: 42px;
 }
 
-
-
+/* Forward and reverse buttons */
 #forward {
     float: right;
 }
@@ -24,7 +23,7 @@
     float: left;
 }
 
-
+/* Container for sequence control slider */
 .sequence-control-container {  
     width: 350px;  
     height: 30px;  
@@ -35,28 +34,65 @@
     border: solid gray 1px;  
 }  
 
+/* Slider within the sequence control */
 .range-slider {  
     width: 200px;  
 }  
 
+/* Adjust the size of the skip button images */
 .sequence-control-container .skip img {
-    max-width: 24px;  /* Example size, adjust as needed */
-    max-height: 24px; /* Example size, adjust as needed */
+    max-width: 24px;
+    max-height: 24px;
 }
 
-
-
-/* Add styles for your legend-control-container here */
+/* Styles for the legend container */
 .legend-control-container {
-    /* Example styles, adjust as needed */
+    left: 50%;         /* Align left side of the container to the map's center */
+    top: 50%;          /* Align top of the container to the map's center */
+    transform: translate(-65%, -10%); /* Shift the container back to truly center it */
     background-color: rgba(255,255,255,0.8);
-    padding: 10px;
+    padding: 20px; /* Increased padding */
     border: solid gray 1px;
-    /* Other styles */
+    border-radius: 4px; /* Rounded corners */
+    margin-bottom: 10px; /* Space below legend */
+    width: 150px; 
+    height: 120px;
+    overflow: visible; /* Allow content to overflow this container */
+    z-index: 1000; /* Ensure it's above all other map layers */
 }
 
-/* .legend-circle {
+
+/* Style adjustments for the legend SVG */
+#attribute-legend {
+    overflow: visible; /* This will prevent SVG elements from being clipped */
+    padding-right: 10px; /* Space on the right */
+}
+
+/* Styling for circles within legend */
+.legend-circle {
     fill: #F47821;
     fill-opacity: 0.8;
     stroke: #000000;
-} */
+    stroke-width: 2px; /* Make stroke a bit thicker */
+}
+
+/* Styling for text within legend */
+.legend-control-container text {
+    font-family: 'Arial', sans-serif; /* Consistent font */
+    font-size: 12px; /* Adjust font size as needed */
+    fill: #333; /* Dark text color for readability */
+}
+
+/* Styling for temporal legend text */
+.temporalLegend {
+    font-size: 16px; /* Slightly larger font size */
+    font-weight: bold; /* Bold text */
+    margin-bottom: 15px; /* Space between title and circles */
+}
+
+/* Ensure the circles don't get clipped */
+.legend-circle {
+    overflow: visible; /* Allow circles to overflow SVG container */
+}
+
+

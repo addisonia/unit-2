@@ -220,7 +220,7 @@ function createLegend(map, currentAttribute) {
                 // Calculate the y position of text based on the index
                 var textY = index * 20 + 20;
                 // Create text SVG element
-                svgTexts += `<text id="${key}-text" x="75" y="${textY}">${Math.round(circleValues[key] * 100) / 100} million</text>`;
+                svgTexts += `<text id="${key}-text" x="75" y="${textY}">${Math.round(circleValues[key] * 100) / 100}</text>`;
             });
 
             // End the SVG string
