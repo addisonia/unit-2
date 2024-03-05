@@ -14,6 +14,10 @@ function createMap(){
 }
 
 function calcPropRadius(attValue) {
+    if (!attValue || isNaN(attValue) || attValue <= 0) {
+        console.error("Invalid attValue for radius calculation:", attValue);
+        return 0; // Return a default minimum size for the circle radius
+    }
     var scaleFactor = 0.0005;
     var area = attValue * scaleFactor;
     return Math.sqrt(area/Math.PI) * 2;
@@ -54,11 +58,14 @@ function createPropSymbols(data, map, attributes){
 
 function processData(data){
     var attributes = [];
-    var exampleProperties = data.features[0].properties.PopulationData;
-    for (var attribute in exampleProperties) {
-        attributes.push(attribute);
+    var populationData = data.features[0].properties.PopulationData;
+    for (var year in populationData) {
+        attributes.push(year);
     }
-    return attributes.sort(); // Make sure to sort the years if necessary
+
+    return attributes.sort(function(a, b) {
+        return parseInt(a) - parseInt(b); // Sorting years numerically
+    });
 }
 
 function createSequenceControls(map, attributes) {
@@ -116,19 +123,57 @@ function createSequenceControls(map, attributes) {
 
 
 // Function to update the symbols and popups based on the selected attribute
-function updatePropSymbols(map, attribute){
-    map.eachLayer(function(layer){
-        if (layer.feature && layer.feature.properties.PopulationData[attribute]){
+function updatePropSymbols(map, attribute) {
+    map.eachLayer(function(layer) {
+        if (layer.feature && layer.feature.properties.PopulationData) {
             var props = layer.feature.properties;
-            var radius = calcPropRadius(props.PopulationData[attribute]);
-            layer.setRadius(radius);
-
-            var popupContent = "<p><b>Entity Name:</b> " + props['Entity Name'] + "</p>";
-            popupContent += "<p><b>Population in " + attribute + ":</b> " + props.PopulationData[attribute] + "</p>";
-            layer.getPopup().setContent(popupContent);
+            var attValue = props.PopulationData[attribute];
+            if (typeof attValue === 'number' && !isNaN(attValue)) {
+                var radius = calcPropRadius(attValue);
+                layer.setRadius(radius);
+                var popupContent = "<p><b>Entity Name:</b> " + props['Entity Name'] + "</p>" +
+                                   "<p><b>Population in " + attribute + ":</b> " + attValue + "</p>";
+                layer.getPopup().setContent(popupContent);
+            }
         }
     });
 }
+
+
+
+var dataStats = {};
+
+// Define the calcStats function
+function calcStats(data) {
+    var allValues = [];
+    // Loop through each feature in the dataset
+    data.features.forEach(function(feature) {
+        // Now we need to access the PopulationData object
+        var populationData = feature.properties.PopulationData;
+        for (var year in populationData) {
+            var value = populationData[year];
+            // Ensure the value is a number and not NaN
+            if (typeof value === 'number' && !isNaN(value)) {
+                allValues.push(value);
+            }
+        }
+    });
+
+    // Calculate min, max, mean from allValues
+    if (allValues.length > 0) {
+        dataStats.min = Math.min(...allValues);
+        dataStats.max = Math.max(...allValues);
+        var sum = allValues.reduce((a, b) => a + b, 0);
+        dataStats.mean = sum / allValues.length;
+    } else {
+        console.error("No valid numeric values found in the dataset");
+    }
+}
+
+
+
+
+
 
 function getData(map){
     fetch("data/SacramentoRegionPop.geojson")
@@ -136,22 +181,51 @@ function getData(map){
             return response.json();
         })
         .then(function(json){
+            // Attributes are obtained here and must be passed to calcStats
             var attributes = processData(json);
             createPropSymbols(json, map, attributes);
             createSequenceControls(map, attributes);
+            calcStats(json); // Pass attributes to calcStats
+            createLegend(map, attributes); // Pass attributes to createLegend
         });
 }
 
 
-function createLegend(map, attributes){
+
+
+function createLegend(map, attributes) {
     var LegendControl = L.Control.extend({
         options: {
             position: 'bottomright'
         },
-
-        onAdd: function () {
+        onAdd: function() {
             var container = L.DomUtil.create('div', 'legend-control-container');
-            // Your code to populate the legend based on the current attribute
+            container.innerHTML = '<p class="temporalLegend">Population in <span class="year">2015-2021</span></p>';
+
+            // Start building the SVG string
+            var svgStart = '<svg id="attribute-legend" width="160px" height="60px">';
+            var circles = ["max", "mean", "min"];
+            var svgContent = "";
+
+            // Loop through each circle and add it to the SVG string
+            circles.forEach(circle => {
+                var radius = calcPropRadius(dataStats[circle]);
+                var cy = 60 - radius; // Adjust for visualization
+                svgContent += `<circle class="legend-circle" id="${circle}" r="${radius}" cy="${cy}" cx="30" fill="#F47821" fill-opacity="0.8" stroke="#000000"/>`;
+            });
+
+            // Loop through each text element and add it to the SVG string
+            circles.forEach((circle, i) => {
+                var textY = i * 20 + 20;
+                svgContent += `<text id="${circle}-text" x="75" y="${textY}">${Math.round(dataStats[circle] * 100) / 100} million</text>`;
+            });
+
+            var svgEnd = '</svg>';
+            // Combine everything into a single SVG string
+            var svg = svgStart + svgContent + svgEnd;
+
+            // Set the innerHTML of the container to the combined SVG string
+            container.innerHTML += svg;
 
             return container;
         }
@@ -159,6 +233,9 @@ function createLegend(map, attributes){
 
     map.addControl(new LegendControl());
 }
+
+
+
 
 document.addEventListener('DOMContentLoaded', createMap);
 

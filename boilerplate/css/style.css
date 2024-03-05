@@ -1,5 +1,10 @@
 /*Add CSS styles here*/
 
+#map {
+    height: 100%;
+    width: 100%;
+}
+
 #panel {
     width: 25%;
     padding: 20px;
@@ -49,3 +54,9 @@
     border: solid gray 1px;
     /* Other styles */
 }
+
+/* .legend-circle {
+    fill: #F47821;
+    fill-opacity: 0.8;
+    stroke: #000000;
+} */
