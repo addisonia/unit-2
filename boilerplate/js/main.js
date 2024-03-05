@@ -61,39 +61,58 @@ function processData(data){
     return attributes.sort(); // Make sure to sort the years if necessary
 }
 
-function createSequenceControls(map, attributes){
-    // Use the existing slider
-    var slider = document.querySelector('.range-slider');
-    slider.min = 0;
-    slider.max = attributes.length - 1;
-    slider.value = 0;
-    slider.step = 1;
+function createSequenceControls(map, attributes) {
+    var SequenceControl = L.Control.extend({
+        options: {
+            position: 'bottomleft' // Position the control at the bottom left corner of the map
+        },
 
-    // Update the event listener to use the existing slider
-    slider.addEventListener('input', function(){
-        var index = this.value;
-        updatePropSymbols(map, attributes[index]);
-    });
+        onAdd: function(map) {
+            // Create the control container with a particular class name
+            var container = L.DomUtil.create('div', 'sequence-control-container');
+            L.DomEvent.disableClickPropagation(container);
 
-    // Attach event listeners to the existing forward and reverse buttons
-    document.querySelector('#forward').addEventListener('click', function(){
-        if(slider.value < slider.max) {
-            slider.value++;
-        } else {
-            slider.value = 0; // Wrap around to the beginning
+            // Create range input element (slider) and insert it into the container
+            container.insertAdjacentHTML('beforeend', '<input class="range-slider" type="range" min="0" max="' + (attributes.length - 1) + '" value="0" step="1">');
+
+            // Create skip buttons and insert them into the container
+            container.insertAdjacentHTML('beforeend', '<button class="skip" id="reverse" title="Reverse"><img src="boilerplate/lib/images/reverse.png"></button>'); 
+            container.insertAdjacentHTML('beforeend', '<button class="skip" id="forward" title="Forward"><img src="boilerplate/lib/images/forward.png"></button>');
+
+            // Add event listeners after adding the control to make sure elements exist
+            var slider = container.querySelector('.range-slider');
+            var reverse = container.querySelector('#reverse');
+            var forward = container.querySelector('#forward');
+
+            slider.addEventListener('input', function() {
+                updatePropSymbols(map, attributes[this.value]);
+            });
+
+            reverse.addEventListener('click', function() {
+                if (slider.value > 0) {
+                    slider.value--;
+                } else {
+                    slider.value = attributes.length - 1; // Wrap to the last attribute
+                }
+                updatePropSymbols(map, attributes[slider.value]);
+            });
+
+            forward.addEventListener('click', function() {
+                if (slider.value < attributes.length - 1) {
+                    slider.value++;
+                } else {
+                    slider.value = 0; // Wrap to the first attribute
+                }
+                updatePropSymbols(map, attributes[slider.value]);
+            });
+
+            return container;
         }
-        updatePropSymbols(map, attributes[slider.value]);
     });
 
-    document.querySelector('#reverse').addEventListener('click', function(){
-        if(slider.value > 0) {
-            slider.value--;
-        } else {
-            slider.value = slider.max; // Wrap around to the end
-        }
-        updatePropSymbols(map, attributes[slider.value]);
-    });
+    map.addControl(new SequenceControl());
 }
+
 
 
 // Function to update the symbols and popups based on the selected attribute
@@ -121,6 +140,24 @@ function getData(map){
             createPropSymbols(json, map, attributes);
             createSequenceControls(map, attributes);
         });
+}
+
+
+function createLegend(map, attributes){
+    var LegendControl = L.Control.extend({
+        options: {
+            position: 'bottomright'
+        },
+
+        onAdd: function () {
+            var container = L.DomUtil.create('div', 'legend-control-container');
+            // Your code to populate the legend based on the current attribute
+
+            return container;
+        }
+    });
+
+    map.addControl(new LegendControl());
 }
 
 document.addEventListener('DOMContentLoaded', createMap);

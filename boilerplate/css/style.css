@@ -9,20 +9,7 @@
     line-height: 42px;
 }
 
-.range-slider {
-    width: 55%;
-}
 
-.step {
-    width: 20%;
-    height: 42px; /* Adjust height as needed */
-    background-color: #eee; /* Background color */
-    border: 1px solid #ccc; /* Border properties */
-}
-
-.step img {
-    width: 100%;
-}
 
 #forward {
     float: right;
@@ -30,4 +17,35 @@
   
 #reverse {
     float: left;
+}
+
+
+.sequence-control-container {  
+    width: 350px;  
+    height: 30px;  
+    background-color: rgba(255,255,255,0.8);  
+    padding: 10px;  
+    line-height: 45px;  
+    text-align: center;  
+    border: solid gray 1px;  
+}  
+
+.range-slider {  
+    width: 200px;  
+}  
+
+.sequence-control-container .skip img {
+    max-width: 24px;  /* Example size, adjust as needed */
+    max-height: 24px; /* Example size, adjust as needed */
+}
+
+
+
+/* Add styles for your legend-control-container here */
+.legend-control-container {
+    /* Example styles, adjust as needed */
+    background-color: rgba(255,255,255,0.8);
+    padding: 10px;
+    border: solid gray 1px;
+    /* Other styles */
 }
