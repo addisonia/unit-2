@@ -35,7 +35,7 @@ function pointToLayer(feature, latlng, attributes){
 
     var layer = L.circleMarker(latlng, options);
 
-    var popupContent = "<p><b>Entity Name:</b> " + feature.properties['Entity Name'] + "</p>";
+    var popupContent = "<p><b>County Name:</b> " + feature.properties['Entity Name'] + "</p>";
     popupContent += "<p><b>Population in " + attribute + ":</b> " + attValue + "</p>";
     layer.bindPopup(popupContent, {
         offset: new L.Point(0, -options.radius)
