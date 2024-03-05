@@ -135,7 +135,10 @@ function updatePropSymbols(map, attribute) {
                                    "<p><b>Population in " + attribute + ":</b> " + attValue + "</p>";
                 layer.getPopup().setContent(popupContent);
             }
+
+            
         }
+        updateLegend(map, attribute);
     });
 }
 
@@ -144,95 +147,117 @@ function updatePropSymbols(map, attribute) {
 var dataStats = {};
 
 // Define the calcStats function
-function calcStats(data) {
-    var allValues = [];
-    // Loop through each feature in the dataset
-    data.features.forEach(function(feature) {
-        // Now we need to access the PopulationData object
-        var populationData = feature.properties.PopulationData;
-        for (var year in populationData) {
-            var value = populationData[year];
-            // Ensure the value is a number and not NaN
-            if (typeof value === 'number' && !isNaN(value)) {
-                allValues.push(value);
-            }
+function calcStats(data, attributes) {
+    dataStats.min = {};
+    dataStats.max = {};
+    dataStats.mean = {};
+
+    // Iterate over each attribute and calculate stats
+    attributes.forEach(attribute => {
+        let values = data.features.map(feature => feature.properties.PopulationData[attribute]).filter(val => val);
+        if(values.length > 0) {
+            dataStats.min[attribute] = Math.min(...values);
+            dataStats.max[attribute] = Math.max(...values);
+            dataStats.mean[attribute] = values.reduce((sum, value) => sum + value) / values.length;
+        } else {
+            dataStats.min[attribute] = 0;
+            dataStats.max[attribute] = 0;
+            dataStats.mean[attribute] = 0;
         }
     });
-
-    // Calculate min, max, mean from allValues
-    if (allValues.length > 0) {
-        dataStats.min = Math.min(...allValues);
-        dataStats.max = Math.max(...allValues);
-        var sum = allValues.reduce((a, b) => a + b, 0);
-        dataStats.mean = sum / allValues.length;
-    } else {
-        console.error("No valid numeric values found in the dataset");
-    }
 }
 
 
 
-
-
-
-function getData(map){
+function getData(map) {
     fetch("data/SacramentoRegionPop.geojson")
-        .then(function(response){
-            return response.json();
-        })
-        .then(function(json){
-            // Attributes are obtained here and must be passed to calcStats
-            var attributes = processData(json);
-            createPropSymbols(json, map, attributes);
-            createSequenceControls(map, attributes);
-            calcStats(json); // Pass attributes to calcStats
-            createLegend(map, attributes); // Pass attributes to createLegend
-        });
-}
+      .then(response => response.json())
+      .then(json => {
+        let attributes = processData(json);
+        calcStats(json, attributes); // Make sure data and attributes are available
+        createPropSymbols(json, map, attributes);
+        createSequenceControls(map, attributes);
+        updateLegend(map, attributes[0]); // Initialize the legend
+      });
+  }
+  
 
 
 
-
-function createLegend(map, attributes) {
+function createLegend(map, currentAttribute) {
+    // This will create the legend based on the current attribute (year)
     var LegendControl = L.Control.extend({
         options: {
             position: 'bottomright'
         },
-        onAdd: function() {
+        onAdd: function(map) {
             var container = L.DomUtil.create('div', 'legend-control-container');
-            container.innerHTML = '<p class="temporalLegend">Population in <span class="year">2015-2021</span></p>';
+            container.innerHTML = `<p class="temporalLegend">Population in <span class="year">${currentAttribute}</span></p>`;
 
-            // Start building the SVG string
+            // Start the SVG string
             var svgStart = '<svg id="attribute-legend" width="160px" height="60px">';
-            var circles = ["max", "mean", "min"];
-            var svgContent = "";
+            
+            // Object to hold circle values for max, mean, and min
+            var circleValues = {
+                max: dataStats.max[currentAttribute],
+                mean: dataStats.mean[currentAttribute],
+                min: dataStats.min[currentAttribute]
+            };
 
-            // Loop through each circle and add it to the SVG string
-            circles.forEach(circle => {
-                var radius = calcPropRadius(dataStats[circle]);
-                var cy = 60 - radius; // Adjust for visualization
-                svgContent += `<circle class="legend-circle" id="${circle}" r="${radius}" cy="${cy}" cx="30" fill="#F47821" fill-opacity="0.8" stroke="#000000"/>`;
+            // Strings to hold SVG content for circles and text
+            var svgCircles = '';
+            var svgTexts = '';
+
+            // Iterate through max, mean, min
+            Object.keys(circleValues).forEach((key, index) => {
+                // Calculate the radius of the circle using calcPropRadius
+                var radius = calcPropRadius(circleValues[key]);
+                // Calculate the cy position based on the radius
+                var cy = 59 - radius; // Position circles from the bottom of SVG container
+                // Create circle SVG element
+                svgCircles += `<circle class="legend-circle" id="${key}" r="${radius}" cy="${cy}" cx="30" fill="#F47821" fill-opacity="0.8" stroke="#000000"/>`;
+
+                // Calculate the y position of text based on the index
+                var textY = index * 20 + 20;
+                // Create text SVG element
+                svgTexts += `<text id="${key}-text" x="75" y="${textY}">${Math.round(circleValues[key] * 100) / 100} million</text>`;
             });
 
-            // Loop through each text element and add it to the SVG string
-            circles.forEach((circle, i) => {
-                var textY = i * 20 + 20;
-                svgContent += `<text id="${circle}-text" x="75" y="${textY}">${Math.round(dataStats[circle] * 100) / 100} million</text>`;
-            });
-
+            // End the SVG string
             var svgEnd = '</svg>';
-            // Combine everything into a single SVG string
-            var svg = svgStart + svgContent + svgEnd;
 
-            // Set the innerHTML of the container to the combined SVG string
-            container.innerHTML += svg;
+            // Append the SVG content to the container
+            container.innerHTML += svgStart + svgCircles + svgTexts + svgEnd;
 
             return container;
         }
     });
 
+    // Remove the old legend if it exists
+    var existingLegend = map.getContainer().querySelector('.legend-control-container');
+    if (existingLegend) {
+        existingLegend.parentNode.removeChild(existingLegend);
+    }
+
+    // Add the new legend to the map
     map.addControl(new LegendControl());
 }
+
+
+
+
+
+function updateLegend(map, attribute) {
+    // First, remove the existing legend to prevent duplicates
+    var existingLegend = map.getContainer().querySelector('.legend-control-container');
+    if (existingLegend) {
+        existingLegend.remove();
+    }
+
+    // Then recreate the legend with the new attribute
+    createLegend(map, attribute);
+}
+
 
 
 
