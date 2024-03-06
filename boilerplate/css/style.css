@@ -55,7 +55,7 @@
     border: solid gray 1px;
     border-radius: 4px; /* Rounded corners */
     margin-bottom: 10px; /* Space below legend */
-    width: 150px; 
+    width: 145px; 
     height: 120px;
     overflow: visible; /* Allow content to overflow this container */
     z-index: 1000; /* Ensure it's above all other map layers */

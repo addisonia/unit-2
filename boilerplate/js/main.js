@@ -131,7 +131,7 @@ function updatePropSymbols(map, attribute) {
             if (typeof attValue === 'number' && !isNaN(attValue)) {
                 var radius = calcPropRadius(attValue);
                 layer.setRadius(radius);
-                var popupContent = "<p><b>Entity Name:</b> " + props['Entity Name'] + "</p>" +
+                var popupContent = "<p><b>County Name:</b> " + props['Entity Name'] + "</p>" +
                                    "<p><b>Population in " + attribute + ":</b> " + attValue + "</p>";
                 layer.getPopup().setContent(popupContent);
             }
@@ -220,8 +220,11 @@ function createLegend(map, currentAttribute) {
                 // Calculate the y position of text based on the index
                 var textY = index * 20 + 20;
                 // Create text SVG element
-                svgTexts += `<text id="${key}-text" x="75" y="${textY}">${Math.round(circleValues[key] * 100) / 100}</text>`;
-            });
+                // Adjusted line for rounding to the nearest whole number
+                var valueText = key === 'mean' ? Math.round(circleValues[key]) : circleValues[key]; // Only round for 'mean'
+                
+                // Create text SVG element with rounded value for 'mean'
+                svgTexts += `<text id="${key}-text" x="75" y="${textY}">${valueText}</text>`;            });
 
             // End the SVG string
             var svgEnd = '</svg>';
